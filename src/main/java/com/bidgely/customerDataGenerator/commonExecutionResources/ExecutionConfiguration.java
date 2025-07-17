@@ -1,11 +1,8 @@
 package com.bidgely.customerDataGenerator.commonExecutionResources;
 
-package com.bidgely.qa.config;
 
 import com.bidgely.customerDataGenerator.context.ContextKeys;
-import com.bidgely.customerDataGenerator.exceptions.BidgelyExceptions;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -19,7 +16,7 @@ import java.util.Properties;
 		"classpath:global.properties",
 		"classpath:pilot-specific.properties"
 })
-public class HawkConfiguration {
+public class ExecutionConfiguration {
 
 	@Value("${executionEnvironment.utility:}")
 	private String utilityName;
@@ -246,57 +243,68 @@ public class HawkConfiguration {
 	@Value("${pilotNameIdMap:}")
 	private String pilotNameIdMap;
 
-	@Bean
-	public ExecutionContext1 executionContext() throws BidgelyExceptions {
-		ExecutionContext1 context = new ExecutionContext1();
+//	@Bean
+//	public ExecutionContext1 executionContext() throws BidgelyExceptions {
+//		ExecutionContext1 context = new ExecutionContext1();
+//
+//		// Load global properties first
+//		loadGlobalProperties(context);
+//
+//		// Load pilot-specific properties (overrides global)
+//		loadPilotSpecificProperties(context);
+//
+//		// Set properties from Spring @Value annotations
+//		setExecutionContextProperties(context);
+//
+//		return context;
+//	}
 
-		// Load global properties first
-		loadGlobalProperties(context);
+//	@Bean
+//	public ExecutionVariables1 executionVariables() {
+//		return new ExecutionVariables1();
+//	}
+//
+//	private void loadGlobalProperties(ExecutionContext1 context) throws BidgelyExceptions {
+//		try (InputStream inputStream = getClass().getResourceAsStream("/global.properties")) {
+//			if (inputStream != null) {
+//				Properties globalProps = new Properties();
+//				globalProps.load(inputStream);
+//				context.appendProperties(globalProps);
+//			}
+//		} catch (IOException e) {
+//			throw new BidgelyExceptions("Failed to load global properties: " + e.getMessage());
+//		}
+//	}
 
-		// Load pilot-specific properties (overrides global)
-		loadPilotSpecificProperties(context);
+//	private void loadPilotSpecificProperties(ExecutionContext1 context) throws BidgelyExceptions {
+//		if (utilityName == null || utilityName.isEmpty()) {
+//			return; // No pilot specified
+//		}
+//
+//		String pilotPropertiesPath = "/execution/context/" + utilityName + "/consolidated.properties";
+//		try (InputStream inputStream = getClass().getResourceAsStream(pilotPropertiesPath)) {
+//			if (inputStream != null) {
+//				Properties pilotProps = new Properties();
+//				pilotProps.load(inputStream);
+//				context.appendProperties(pilotProps);
+//			}
+//		} catch (IOException e) {
+//			throw new BidgelyExceptions("Failed to load pilot properties for " + utilityName + ": " + e.getMessage());
+//		}
+//	}
 
-		// Set properties from Spring @Value annotations
-		setExecutionContextProperties(context);
-
-		return context;
-	}
-
-	@Bean
-	public ExecutionVariables1 executionVariables() {
-		return new ExecutionVariables1();
-	}
-
-	private void loadGlobalProperties(ExecutionContext1 context) throws BidgelyExceptions {
-		try (InputStream inputStream = getClass().getResourceAsStream("/global.properties")) {
-			if (inputStream != null) {
-				Properties globalProps = new Properties();
-				globalProps.load(inputStream);
-				context.appendProperties(globalProps);
+	private void setExecutionContextProperties(ExecutionContext context) {
+		// Load global properties
+		Properties globalProperties = new Properties();
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream("global.properties")) {
+			if (input != null) {
+				globalProperties.load(input);
 			}
 		} catch (IOException e) {
-			throw new BidgelyExceptions("Failed to load global properties: " + e.getMessage());
-		}
-	}
-
-	private void loadPilotSpecificProperties(ExecutionContext1 context) throws BidgelyExceptions {
-		if (utilityName == null || utilityName.isEmpty()) {
-			return; // No pilot specified
+			// Log error but continue with default values
+			System.err.println("Error loading global.properties: " + e.getMessage());
 		}
 
-		String pilotPropertiesPath = "/execution/context/" + utilityName + "/consolidated.properties";
-		try (InputStream inputStream = getClass().getResourceAsStream(pilotPropertiesPath)) {
-			if (inputStream != null) {
-				Properties pilotProps = new Properties();
-				pilotProps.load(inputStream);
-				context.appendProperties(pilotProps);
-			}
-		} catch (IOException e) {
-			throw new BidgelyExceptions("Failed to load pilot properties for " + utilityName + ": " + e.getMessage());
-		}
-	}
-
-	private void setExecutionContextProperties(ExecutionContext1 context) {
 		// Execution Environment Properties
 		if (utilityName != null && !utilityName.isEmpty()) {
 			context.addProperty(ContextKeys.ExecutionEnvironment_Utility, utilityName);
@@ -407,7 +415,7 @@ public class HawkConfiguration {
 
 		// SFTP Properties
 		if (sftpWorkingDirectory != null && !sftpWorkingDirectory.isEmpty()) {
-			context.addProperty(ContextKeys.Sftp_WorkingDirectory, sftpWorkingDirectory);
+			context.addProperty(ContextKeys.SFTP_WorkingDirectory, sftpWorkingDirectory);
 		}
 
 		// Date Format Properties
@@ -447,87 +455,6 @@ public class HawkConfiguration {
 			context.addProperty(ContextKeys.Suffix_MeterFile, meterFileSuffix);
 		}
 
-		// Appliance Properties
-		if (alwaysOn != null && !alwaysOn.isEmpty()) {
-			context.addProperty(ContextKeys.AlwaysOn, alwaysOn);
-		}
-		if (cooking != null && !cooking.isEmpty()) {
-			context.addProperty(ContextKeys.Cooking, cooking);
-		}
-		if (refrigeration != null && !refrigeration.isEmpty()) {
-			context.addProperty(ContextKeys.Refrigeration, refrigeration);
-		}
-		if (laundry != null && !laundry.isEmpty()) {
-			context.addProperty(ContextKeys.Laundry, laundry);
-		}
-		if (entertainment != null && !entertainment.isEmpty()) {
-			context.addProperty(ContextKeys.Entertainment, entertainment);
-		}
-		if (lighting != null && !lighting.isEmpty()) {
-			context.addProperty(ContextKeys.Lighting, lighting);
-		}
-		if (other != null && !other.isEmpty()) {
-			context.addProperty(ContextKeys.Other, other);
-		}
-		if (electricVehicle != null && !electricVehicle.isEmpty()) {
-			context.addProperty(ContextKeys.ElectricVehicle, electricVehicle);
-		}
-		if (pool != null && !pool.isEmpty()) {
-			context.addProperty(ContextKeys.Pool, pool);
-		}
-		if (airConditioning != null && !airConditioning.isEmpty()) {
-			context.addProperty(ContextKeys.AirConditioning, airConditioning);
-		}
-		if (spaceHeating != null && !spaceHeating.isEmpty()) {
-			context.addProperty(ContextKeys.SpaceHeating, spaceHeating);
-		}
-		if (waterHeating != null && !waterHeating.isEmpty()) {
-			context.addProperty(ContextKeys.WaterHeating, waterHeating);
-		}
-		if (total != null && !total.isEmpty()) {
-			context.addProperty(ContextKeys.Total, total);
-		}
-
-		// Currency and Consumption Units
-		if (currencyUnit != null && !currencyUnit.isEmpty()) {
-			context.addProperty(ContextKeys.Currency_Unit, currencyUnit);
-		}
-		if (consumptionUnit != null && !consumptionUnit.isEmpty()) {
-			context.addProperty(ContextKeys.Consumption_Unit, consumptionUnit);
-		}
-
-		// Dashboard and Tips Properties
-		if (dashboardTipsPageFirstEntry != null && !dashboardTipsPageFirstEntry.isEmpty()) {
-			context.addProperty(ContextKeys.Dashboard_Tips_Page_First_Entry, dashboardTipsPageFirstEntry);
-		}
-		if (dashboardTipsPageLastEntry != null && !dashboardTipsPageLastEntry.isEmpty()) {
-			context.addProperty(ContextKeys.Dashboard_Tips_Page_Last_Entry, dashboardTipsPageLastEntry);
-		}
-		if (tipsPageApplianceNameMapping != null && !tipsPageApplianceNameMapping.isEmpty()) {
-			context.addProperty(ContextKeys.Tips_Page_Appliance_Name_Mapping, tipsPageApplianceNameMapping);
-		}
-
-		// Recommendation Button Properties
-		if (recoButtonDidIt != null && !recoButtonDidIt.isEmpty()) {
-			context.addProperty(ContextKeys.Reco_Button_Did_It, recoButtonDidIt);
-		}
-		if (recoButtonWillDoIt != null && !recoButtonWillDoIt.isEmpty()) {
-			context.addProperty(ContextKeys.Reco_Button_Will_Do_It, recoButtonWillDoIt);
-		}
-
-		// Conversion Properties
-		if (kwToCcfConversionValue != null && !kwToCcfConversionValue.isEmpty()) {
-			context.addProperty(ContextKeys.Kw_To_Ccf_Conversion_Value, kwToCcfConversionValue);
-		}
-
-		// Email and Automation Properties
-		if (emailValidationPropertyFilepath != null && !emailValidationPropertyFilepath.isEmpty()) {
-			context.addProperty(ContextKeys.Email_Validation_PropertyFilepath, emailValidationPropertyFilepath);
-		}
-		if (generatedAutomationPropertyPath != null && !generatedAutomationPropertyPath.isEmpty()) {
-			context.addProperty(ContextKeys.Generated_Automation_Property_Path, generatedAutomationPropertyPath);
-		}
-
 		// Uploader Properties
 		if (hanDataUploaderConnectTimeout != null && !hanDataUploaderConnectTimeout.isEmpty()) {
 			context.addProperty(ContextKeys.Uploaders_BackendApiHanDataUploader_ConnectTimeOut, hanDataUploaderConnectTimeout);
@@ -536,30 +463,21 @@ public class HawkConfiguration {
 			context.addProperty(ContextKeys.Uploaders_BackendApiHanDataUploader_ReadTimeOut, hanDataUploaderReadTimeout);
 		}
 
-		// Email Image Properties
-		if (emailImageFolderPath != null && !emailImageFolderPath.isEmpty()) {
-			context.addProperty(ContextKeys.Email_Image_FolderPath, emailImageFolderPath);
-		}
-		if (emailExtractedImageFolderName != null && !emailExtractedImageFolderName.isEmpty()) {
-			context.addProperty(ContextKeys.Email_Extracted_Image_FolderName, emailExtractedImageFolderName);
-		}
-		if (emailDownloadedRecoImageFolderName != null && !emailDownloadedRecoImageFolderName.isEmpty()) {
-			context.addProperty(ContextKeys.Email_Downloaded_RecoImage_FolderName, emailDownloadedRecoImageFolderName);
-		}
-
-		// Properties to Update
-		if (propertiesToUpdate != null && !propertiesToUpdate.isEmpty()) {
-			context.addProperty(ContextKeys.Properties_To_Update, propertiesToUpdate);
-		}
-
-		// Pilot Heavy Test Components
-		if (pilotHeavyTestComponents != null && !pilotHeavyTestComponents.isEmpty()) {
-			context.addProperty(ContextKeys.Pilot_Heavy_Test_Components, pilotHeavyTestComponents);
-		}
-
-		// Pilot Name ID Map
-		if (pilotNameIdMap != null && !pilotNameIdMap.isEmpty()) {
-			context.addProperty(ContextKeys.PilotNameIdMap, pilotNameIdMap);
-		}
+//		// Properties to Update - fetch from global properties instead of context
+//		String propertiesToUpdateFromGlobal = globalProperties.getProperty("properties.to.update", "");
+//		if (propertiesToUpdateFromGlobal != null && !propertiesToUpdateFromGlobal.isEmpty()) {
+//			context.addProperty(ContextKeys.Properties_To_Update, propertiesToUpdateFromGlobal);
+//		}
+//
+//		// Pilot Heavy Test Components
+//		if (pilotHeavyTestComponents != null && !pilotHeavyTestComponents.isEmpty()) {
+//			context.addProperty(ContextKeys.Pilot_Heavy_Test_Components, pilotHeavyTestComponents);
+//		}
+//
+//		// Pilot Name ID Map - fetch from global properties instead of context
+//		String pilotNameIdMapFromGlobal = globalProperties.getProperty("pilotNameIdMap", "");
+//		if (pilotNameIdMapFromGlobal != null && !pilotNameIdMapFromGlobal.isEmpty()) {
+//			context.addProperty(ContextKeys.PilotNameIdMap, pilotNameIdMapFromGlobal);
+//		}
 	}
 }

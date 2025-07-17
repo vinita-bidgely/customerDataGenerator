@@ -14,7 +14,7 @@ public class UtilityBillingDataGasApi
 
 	public UtilityBillingDataGasApi(String beUrl,
 			IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.UTILITY_BILLING_DATA, UtilityBillingDataResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.UTILITY_BILLING_DATA, UtilityBillingDataResponse.class);
 	}
 
 	public UtilityBillingDataResponse get(UUID userUUID, int t0, int t1)

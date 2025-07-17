@@ -14,7 +14,7 @@ public class GBRawConsumptionDataApi
 
 	public GBRawConsumptionDataApi(String beUrl,
 			IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.GB_RAW_CONSUMPTION_DATA, GBConsumptionDataResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.GB_RAW_CONSUMPTION_DATA, GBConsumptionDataResponse.class);
 	}
 
 	public GBConsumptionDataResponse get(UUID userUUID, int gws,

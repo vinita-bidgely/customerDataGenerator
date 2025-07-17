@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class MetaUserHomeGatewayMeterApi extends BaseBidgelyApi<MetaUserHomeGatewayMeterResponse> {
 	public MetaUserHomeGatewayMeterApi(String beUrl, IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.META_USER_HOME_GATEWAY_METER, MetaUserHomeGatewayMeterResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.META_USER_HOME_GATEWAY_METER, MetaUserHomeGatewayMeterResponse.class);
 	}
 
 

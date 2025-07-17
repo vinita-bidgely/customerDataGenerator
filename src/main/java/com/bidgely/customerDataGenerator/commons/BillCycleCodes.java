@@ -1,6 +1,7 @@
 package com.bidgely.customerDataGenerator.commons;
 
 import com.bidgely.customerDataGenerator.api.Apis;
+import com.bidgely.customerDataGenerator.api.Apis.GetUriFor;
 import com.bidgely.customerDataGenerator.api.BaseBidgelyApi;
 import com.bidgely.customerDataGenerator.context.ContextKeys;
 import com.bidgely.customerDataGenerator.exceptions.BidgelyExceptions;
@@ -33,7 +34,7 @@ public class BillCycleCodes extends BaseBidgelyApi<BillCycleCodeWithIdentifierRe
 
 	public BillCycleCodes(String beUrl, IAuthTokenManager authTokenManager)
 			throws BidgelyExceptions {
-		super(beUrl, authTokenManager);
+		super(beUrl, authTokenManager, GetUriFor.GET_BILLING_CYCLE_WITH_IDENTIFIER_FOR_PILOT, BillCycleCodeWithIdentifierResponse.class);
 		this.baseUrl = beUrl;
 		this.authTokenManager = authTokenManager;
 	}

@@ -2,7 +2,6 @@ package com.bidgely.customerDataGenerator.commons;
 
 import com.bidgely.customerDataGenerator.context.ContextKeys;
 import com.bidgely.customerDataGenerator.exceptions.BidgelyExceptions;
-import com.bidgely.qa.core.gson.EscapeStringSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.jersey.api.client.Client;

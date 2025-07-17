@@ -16,7 +16,7 @@ public class GetLabelTimeStamps extends BaseBidgelyApi<LabelTimeStampResponse> {
 
 	public GetLabelTimeStamps(String beUrl,
 			IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.LABEL_TIMESTAMPS, LabelTimeStampResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.LABEL_TIMESTAMPS, LabelTimeStampResponse.class);
 		this.authTokenManager = authTokenManager;
 	}
 

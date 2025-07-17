@@ -85,6 +85,7 @@ public enum ContextKeys {
 	DeviceDefaults_Platform("deviceDefaults.platform"),
 	DeviceDefaults_PlatformToken("deviceDefaults.platformToken"),
 
+	SFTP_WorkingDirectory("sftp.workingdirectory"),
 	Generators_RangeBoundGenerator_LowUsage_MinimumId(
 			"generators.rangeBoundGenerator.low.minId"),
 	Generators_RangeBoundGenerator_LowUsage_MaximumId(
@@ -151,8 +152,6 @@ public enum ContextKeys {
 	EventTrigger_SSH_DissaggregationTrigger_Command(
 			"eventTrigger.ssh.disaggregationTrigger.command"),
 
-	SFTP_WorkingDirectory("sftp.workingdirectory"),
-
 	PilotDefaults_RawDataUnit("pilotDefaults.rawDataUnit"),
 	UserDefaults_BillingGroup("userDefaults.billingGroup"),
 	ConsumptionDataDefaults_Offset("user.consumption.offset.value"),
@@ -184,6 +183,6 @@ public enum ContextKeys {
 		return this.key;
 	}
 
-	public class EmailValidation_PropertyFilepath {
-	}
+//	public class EmailValidation_PropertyFilepath {
+//	}
 }

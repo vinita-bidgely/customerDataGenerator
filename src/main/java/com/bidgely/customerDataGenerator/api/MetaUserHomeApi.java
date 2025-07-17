@@ -12,7 +12,7 @@ import java.util.UUID;
 public class MetaUserHomeApi extends BaseBidgelyApi<MetaUserHomeApiResponse> {
 
 	public MetaUserHomeApi(String beUrl, IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.META_USER_HOME, MetaUserHomeApiResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.META_USER_HOME, MetaUserHomeApiResponse.class);
 	}
 
 

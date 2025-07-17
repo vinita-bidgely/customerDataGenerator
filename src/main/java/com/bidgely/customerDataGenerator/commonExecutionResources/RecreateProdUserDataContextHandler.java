@@ -4,6 +4,7 @@ import com.bidgely.customerDataGenerator.context.ContextKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import com.bidgely.customerDataGenerator.context.ContextKeys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class RecreateProdUserDataContextHandler {
 		executionContext.setProperty(ContextKeys.Separator_InvoiceFile, "|");
 
 		// Set email validation
-		executionContext.setProperty(ContextKeys.EmailValidation_PropertyFilepath, "/email/validation/");
+//		executionContext.setProperty(ContextKeys.EmailValidation_PropertyFilepath, "/email/validation/");
 
 		return executionContext;
 	}
@@ -104,7 +105,7 @@ public class RecreateProdUserDataContextHandler {
 
 			// Apply utility-specific properties to execution context
 			for (String key : utilityProps.stringPropertyNames()) {
-				executionContext.setProperty(key, utilityProps.getProperty(key));
+				executionContext.setProperty(ContextKeys.valueOf(key), utilityProps.getProperty(key));
 			}
 
 		} catch (Exception e) {
@@ -120,36 +121,36 @@ public class RecreateProdUserDataContextHandler {
 		Map<String, String> requiredProps = new HashMap<>();
 
 		// Core properties always required
-		requiredProps.put(ContextKeys.UserDefaults_UtilityName, utilityName);
-		requiredProps.put(ContextKeys.UserDefaults_Timezone, "UTC");
-		requiredProps.put(ContextKeys.UserDefaults_EmailPrefix, utilityName + "_user");
+		requiredProps.put(String.valueOf(ContextKeys.UserDefaults_UtilityName), utilityName);
+		requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Timezone), "UTC");
+		requiredProps.put(String.valueOf(ContextKeys.UserDefaults_EmailPrefix), utilityName + "_user");
 
 		// Utility-specific properties
 		switch (utilityName.toLowerCase()) {
 		case "tpu":
-			requiredProps.put(ContextKeys.UserDefaults_Address, "123 Main St");
-			requiredProps.put(ContextKeys.UserDefaults_City, "San Francisco");
-			requiredProps.put(ContextKeys.UserDefaults_State, "CA");
-			requiredProps.put(ContextKeys.UserDefaults_Zip, "12345");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Address), "123 Main St");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_City), "San Francisco");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_State), "CA");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Zip), "12345");
 			break;
 		case "scg":
-			requiredProps.put(ContextKeys.UserDefaults_Address, "456 Broadway");
-			requiredProps.put(ContextKeys.UserDefaults_City, "New York");
-			requiredProps.put(ContextKeys.UserDefaults_State, "NY");
-			requiredProps.put(ContextKeys.UserDefaults_Zip, "10001");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Address), "456 Broadway");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_City), "New York");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_State), "NY");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Zip), "10001");
 			break;
 		case "nsp":
-			requiredProps.put(ContextKeys.UserDefaults_Address, "789 Michigan Ave");
-			requiredProps.put(ContextKeys.UserDefaults_City, "Chicago");
-			requiredProps.put(ContextKeys.UserDefaults_State, "IL");
-			requiredProps.put(ContextKeys.UserDefaults_Zip, "60601");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Address), "789 Michigan Ave");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_City), "Chicago");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_State), "IL");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Zip), "60601");
 			break;
 		default:
 			// Use defaults for unknown utilities
-			requiredProps.put(ContextKeys.UserDefaults_Address, "Default Address");
-			requiredProps.put(ContextKeys.UserDefaults_City, "Default City");
-			requiredProps.put(ContextKeys.UserDefaults_State, "CA");
-			requiredProps.put(ContextKeys.UserDefaults_Zip, "00000");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Address), "Default Address");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_City), "Default City");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_State), "CA");
+			requiredProps.put(String.valueOf(ContextKeys.UserDefaults_Zip), "00000");
 		}
 
 		return requiredProps;

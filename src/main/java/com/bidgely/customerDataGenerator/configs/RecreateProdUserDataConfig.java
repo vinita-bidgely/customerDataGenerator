@@ -1,8 +1,8 @@
 package com.bidgely.customerDataGenerator.configs;
 
 
-import com.bidgely.qa.core.context.variables.ExecutionVariables;
 import com.bidgely.customerDataGenerator.exceptions.BidgelyExceptions;
+import java.util.List;
 
 public class RecreateProdUserDataConfig
 		extends BaseConfig {
@@ -18,10 +18,9 @@ public class RecreateProdUserDataConfig
 	private String houseType;
 	private String subPilot;
 	private String inputMeterFuel;  /* comma separated string for eg: AMI-ELECTRIC,AMI-GAS e.t.c */
-	private String rawDataStructureFilePath;
 	private int startTimeStamp;
 	private int endTimeStamp;
-	private String usersFileLocation;
+	private List<String> usersList; // List of user UUIDs from config
 	private String fileUploadBucket; // for storing files
 	private String ingestionBucket; // pilot specific bucket to for creating user
 
@@ -108,16 +107,9 @@ public class RecreateProdUserDataConfig
 		return ingestionBucket;
 	}
 
-
-	// todo - is this needed, think of a approach
-	public String getRawDataStructureFilePath(ExecutionVariables executionVariables) throws BidgelyExceptions {
-		return rawDataStructureFilePath!=null && !rawDataStructureFilePath.isEmpty() ?getSubstitutedFilePaths(rawDataStructureFilePath, executionVariables) :null;
-	}
-
-	// todo  - receinve this as a list of uuid fron api req payload
-	public String getUsersFileLocation(ExecutionVariables executionVariables) throws
-			BidgelyExceptions {
-		return getSubstitutedFilePaths(usersFileLocation, executionVariables);
+	// Get list of users from config
+	public List<String> getUsersList() {
+		return usersList;
 	}
 
 	public String getFileUploadBucket() {
@@ -140,19 +132,18 @@ public class RecreateProdUserDataConfig
 		return constructInvoiceFile;
 	}
 
-	// todo - get this from an api req payload i.e billCycleCode
-	public String getBillCycleCode(ExecutionVariables executionVariables) {
-		return executionVariables.containsKey(billCycleCode)? executionVariables.get(billCycleCode).toString(): billCycleCode;
+	public String getBillCycleCode() {
+		return billCycleCode;
 	}
 
 	public String getMeterContractDateFormat() {
 		return meterContractDateFormat;
 	}
 
-	// todo
-	public String getUserPrefFile(ExecutionVariables executionVariables) throws BidgelyExceptions {
-		return userPrefFile!=null && !userPrefFile.isEmpty()? getSubstitutedFilePaths(userPrefFile, executionVariables): userPrefFile;
-	}
+	// todo - Will implememt later as per requirement
+//	public String getUserPrefFile(ExecutionVariables executionVariables) throws BidgelyExceptions {
+//		return userPrefFile!=null && !userPrefFile.isEmpty()? getSubstitutedFilePaths(userPrefFile, executionVariables): userPrefFile;
+//	}
 
 	public String getT0() {
 		return t0;
@@ -198,6 +189,79 @@ public class RecreateProdUserDataConfig
 
 	public void setSourcePilotName(String sourcePilotName) {
 		this.sourcePilotName = sourcePilotName;
+	}
+
+	// Setter methods for API support
+	public void setProdBaseUrl(String prodBaseUrl) {
+		this.prodBaseUrl = prodBaseUrl;
+	}
+
+	public void setProdAccessToken(String prodAccessToken) {
+		this.prodAccessToken = prodAccessToken;
+	}
+
+	public void setHouseType(String houseType) {
+		this.houseType = houseType;
+	}
+
+	public void setSubPilot(String subPilot) {
+		this.subPilot = subPilot;
+	}
+
+	public void setInputMeterFuel(String inputMeterFuel) {
+		this.inputMeterFuel = inputMeterFuel;
+	}
+
+	public void setIngestionBucket(String ingestionBucket) {
+		this.ingestionBucket = ingestionBucket;
+	}
+
+	public void setFileUploadBucket(String fileUploadBucket) {
+		this.fileUploadBucket = fileUploadBucket;
+	}
+
+	public void setConstructUserFile(boolean constructUserFile) {
+		this.constructUserFile = constructUserFile;
+	}
+
+	public void setConstructRawFile(boolean constructRawFile) {
+		this.constructRawFile = constructRawFile;
+	}
+
+	public void setConstructInvoiceFile(boolean constructInvoiceFile) {
+		this.constructInvoiceFile = constructInvoiceFile;
+	}
+
+	public void setBillCycleCode(String billCycleCode) {
+		this.billCycleCode = billCycleCode;
+	}
+
+	public void setUsersList(List<String> usersList) {
+		this.usersList = usersList;
+	}
+
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public void setT0(String t0) {
+		this.t0 = t0;
+	}
+
+	public void setT1(String t1) {
+		this.t1 = t1;
+	}
+
+	public void setDestinationPilotName(String destinationPilotName) {
+		this.destinationPilotName = destinationPilotName;
+	}
+
+	public void setDestinationPilotId(String destinationPilotId) {
+		this.destinationPilotId = destinationPilotId;
 	}
 
 }

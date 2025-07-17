@@ -25,6 +25,7 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileReader;
@@ -40,6 +41,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class RecreateProdUserDataTool {
 
 	@Autowired
@@ -118,39 +120,21 @@ public class RecreateProdUserDataTool {
 		String timeZone = recreateProdUserDataConfig.getTimeZone();
 		String dateFormat = recreateProdUserDataConfig.getDateFormat();
 
-		// todo - Is this needed
-		String rawDataStructureFilePath = recreateProdUserDataConfig.getRawDataStructureFilePath(executionVariables);
-		// todo - take it req payload
-		String usersFileLocation = recreateProdUserDataConfig.getUsersFileLocation(executionVariables);
+		// Get list of users from config instead of file
+		List<String> listOfUsers = recreateProdUserDataConfig.getUsersList();
 		List<String> meterFuelList = Arrays.stream(recreateProdUserDataConfig.getInputMeterFuel().split(","))
 				.map(String::trim).collect(Collectors.toList());
 
-		// todo - get this from an api req payload i.e billCycleCode
-		String billCycleCodeOfLowerEnv = recreateProdUserDataConfig.getBillCycleCode(executionVariables);
+		String billCycleCodeOfLowerEnv = recreateProdUserDataConfig.getBillCycleCode();
 
-		// todo - get this from an api req payload i.e userPrefFilePath
-		String userPrefFilePath = recreateProdUserDataConfig.getUserPrefFile(executionVariables);
+		// Will implement in next phase as it is not required for now
+//		String userPrefFilePath = recreateProdUserDataConfig.getUserPrefFile(executionVariables);
 		String t0 = recreateProdUserDataConfig.getT0();
 		String t1 = recreateProdUserDataConfig.getT1();
 
-		/* reading production users UUID's as list from the file */
-		List<String> listOfUsers = Collections.emptyList();
-		try {
-			File file = new File(usersFileLocation);
-			listOfUsers = Files.readAllLines(file.toPath()); // Read all lines
-		} catch (IOException e) {
-			throw new BidgelyExceptions("IOException occurred: " + e);
-		}
-
-		/* reading raw file format from file */
-		String contentFormat = "";
-		if(recreateProdUserDataConfig.isConstructRawFile() && rawDataStructureFilePath!=null && !rawDataStructureFilePath.isEmpty()) {
-			try {
-				File file = new File(rawDataStructureFilePath);
-				contentFormat = new String(Files.readAllBytes(file.toPath()));
-			} catch (IOException e) {
-				throw new BidgelyExceptions("IOException occurred: " + e);
-			}
+		// Validate that we have users to process
+		if (listOfUsers == null || listOfUsers.isEmpty()) {
+			throw new BidgelyExceptions("No users provided in configuration");
 		}
 
 		String utilityName;
@@ -159,12 +143,9 @@ public class RecreateProdUserDataTool {
 			utilityName = recreateProdUserDataConfig.getDestinationPilotName();
 			pilotId = recreateProdUserDataConfig.getDestinationPilotId();
 		}else{
-			//Todo - fetch from api req payload
 			utilityName = recreateProdUserDataConfig.getSourcePilotName();
-			//Todo - fetch from api req payload
 			pilotId = recreateProdUserDataConfig.getSourcePilotId();
 		}
-		//Todo - fetch from api req payload
 		String sourceUtilityName = recreateProdUserDataConfig.getSourcePilotName();
 
 		Properties environmentProperties = new Properties();
@@ -286,12 +267,12 @@ public class RecreateProdUserDataTool {
 					createAndUploadFileToBucket(recreateProdUserDataConfig, utilityName, userFilename, userFileData.toString(), 5);
 				}
 
-				if(userPrefFilePath!=null && !userPrefFilePath.isEmpty()){
-					File userPrefFile = new File(userPrefFilePath);
-					String userPrefFileData = new String(Files.readAllBytes(userPrefFile.toPath()));
-					userPrefFileData = new StrSubstitutor(executionVariables).replace(userPrefFileData);
-					createAndUploadFileToBucket(recreateProdUserDataConfig, utilityName, userPrefFile.getName(), userPrefFileData,2);
-				}
+//				if(userPrefFilePath!=null && !userPrefFilePath.isEmpty()){
+//					File userPrefFile = new File(userPrefFilePath);
+//					String userPrefFileData = new String(Files.readAllBytes(userPrefFile.toPath()));
+//					userPrefFileData = new StrSubstitutor(executionVariables).replace(userPrefFileData);
+//					createAndUploadFileToBucket(recreateProdUserDataConfig, utilityName, userPrefFile.getName(), userPrefFileData,2);
+//				}
 
 				if (recreateProdUserDataConfig.isConstructMeterFile()) {
 					String meterFilePrefix = propertiesMap.get("prefix.meterFile").trim();
@@ -365,7 +346,7 @@ public class RecreateProdUserDataTool {
 						int duration = gbRawConsumptionDataResponse.get(0).getDuration();
 						rawFilePrefix = rawFilePrefix.replaceAll("RAW_D_\\d+_S", "RAW_D_" + duration + "_S");
 
-						rawData=getRawData(gbRawConsumptionDataResponse, executionVariables, utilityName, contentFormat, rawFileDateFormat, gwsId, meterFuel);
+						rawData=getRawData(gbRawConsumptionDataResponse, executionVariables, utilityName, rawFileDateFormat, gwsId, meterFuel);
 						String rawFilename = rawFilePrefix + userUUID + rawFileSuffix;
 						createAndUploadFileToBucket(recreateProdUserDataConfig, utilityName, rawFilename, rawData, 30);
 					}
@@ -592,7 +573,7 @@ public class RecreateProdUserDataTool {
 		return metaTokenOFCreatedUser;
 	}
 
-	private String getRawData(GBConsumptionDataResponse gbRawConsumptionDataResponse, ExecutionVariables executionVariables, String utilityName, String contentFormat, DateFormat rawFileDateFormat, String gwsId, String meterFuel) {
+	private String getRawData(GBConsumptionDataResponse gbRawConsumptionDataResponse, ExecutionVariables executionVariables, String utilityName, DateFormat rawFileDateFormat, String gwsId, String meterFuel) {
 		StringBuilder updatedContext = new StringBuilder();
 		String PIPE = "|";
 

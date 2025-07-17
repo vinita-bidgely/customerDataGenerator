@@ -25,7 +25,7 @@ import java.util.Map;
 public abstract class BaseBidgelyApi<T> {
 	protected String    beUrl;
 	protected String    authToken;
-	protected ApisUrl.GetUriFor uri;
+	protected Apis.GetUriFor uri;
 	private   Class<T>  responseClass;
 	protected String    username;
 	protected String    password;
@@ -38,7 +38,7 @@ public abstract class BaseBidgelyApi<T> {
 	private IAuthTokenManager authTokenManager;
 
 	protected BaseBidgelyApi(String beUrl, IAuthTokenManager authTokenManager,
-			ApisUrl.GetUriFor uri,
+			Apis.GetUriFor uri,
 			Class<T> responseClass) {
 		this.beUrl = beUrl;
 		this.authTokenManager = authTokenManager;
@@ -46,7 +46,7 @@ public abstract class BaseBidgelyApi<T> {
 		this.responseClass = responseClass;
 	}
 
-	protected BaseBidgelyApi(String beUrl, ApisUrl.GetUriFor uri, String username,
+	protected BaseBidgelyApi(String beUrl, Apis.GetUriFor uri, String username,
 			String password,
 			Class<T> responseClass) {
 		this.beUrl = beUrl;
@@ -833,7 +833,7 @@ public abstract class BaseBidgelyApi<T> {
 			}
 			final AmazonCloudWatch cw = aws.getAmazonCloudWatchClientInstance();
 			Dimension emptyResponseDimension = new Dimension().withName(AWSConstants.Dimensions.RECEIVED_EMPTY_RESPONSE.getName()).withValue(emptyResponse);
-			MetricDatum datum = new MetricDatum().withMetricName(ApisUrl.GetUriFor.LABEL_TIMESTAMPS.name()).withUnit(
+			MetricDatum datum = new MetricDatum().withMetricName(Apis.GetUriFor.LABEL_TIMESTAMPS.name()).withUnit(
 					StandardUnit.Count).withValue(1.0).withDimensions(emptyResponseDimension);
 			PutMetricDataRequest request = new PutMetricDataRequest().withNamespace(AWSConstants.Namespaces.BIDGELY_AUTOMATION.getName()).withMetricData(datum);
 			cw.putMetricData(request);

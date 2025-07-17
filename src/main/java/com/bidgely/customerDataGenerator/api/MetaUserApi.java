@@ -11,7 +11,7 @@ import java.util.UUID;
 public class MetaUserApi extends BaseBidgelyApi<InvoiceDataList.MetaUserApiResponse> {
 
 	public MetaUserApi(String beUrl, IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.META_USER, InvoiceDataList.MetaUserApiResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.META_USER, InvoiceDataList.MetaUserApiResponse.class);
 	}
 
 

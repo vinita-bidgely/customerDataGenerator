@@ -4,7 +4,7 @@ import com.bidgely.customerDataGenerator.api.Auth.IAuthTokenManager;
 import com.bidgely.customerDataGenerator.exceptions.BidgelyExceptions;
 import com.bidgely.customerDataGenerator.responses.apiResponses.MetaUserHomeGatewaysApiResponse;
 import com.google.common.collect.ImmutableMap;
-import com.bidgely.customerDataGenerator.api.ApisUrl.GetUriFor;
+import com.bidgely.customerDataGenerator.api.Apis.GetUriFor;
 
 import java.util.Map;
 import java.util.UUID;

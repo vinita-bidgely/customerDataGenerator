@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class EndPointsApi extends BaseBidgelyApi<EndPointsResponse> {
 	public EndPointsApi(String beUrl, IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.PUBLIC_API_USER_ENDPOINT, EndPointsResponse.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.PUBLIC_API_USER_ENDPOINT, EndPointsResponse.class);
 	}
 
 

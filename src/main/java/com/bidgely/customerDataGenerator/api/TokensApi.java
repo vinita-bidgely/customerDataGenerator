@@ -9,7 +9,7 @@ import java.util.Map;
 public class TokensApi extends BaseBidgelyApi<String> {
 
 	protected TokensApi(String beUrl, IAuthTokenManager authTokenManager) {
-		super(beUrl, authTokenManager, ApisUrl.GetUriFor.TOKENS_API, String.class);
+		super(beUrl, authTokenManager, Apis.GetUriFor.TOKENS_API, String.class);
 	}
 
 	public String get(String token) throws BidgelyExceptions {
